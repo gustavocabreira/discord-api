@@ -2,9 +2,11 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Response;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class RegisterTest extends TestCase
@@ -20,7 +22,7 @@ class RegisterTest extends TestCase
             'password_confirmation' => 'password',
         ];
 
-        $response = $this->post(route('api.auth.register'), $payload);
+        $response = $this->postJson(route('api.auth.register'), $payload);
 
         $response
             ->assertStatus(Response::HTTP_CREATED)
@@ -37,5 +39,34 @@ class RegisterTest extends TestCase
             'name' => $payload['name'],
             'email' => $payload['email'],
         ]);
+    }
+
+   #[DataProvider('userDataProvider')]
+    public function test_user_registration_validation($userData, $rule)
+    {
+        $response = $this->postJson(route('api.auth.register'), $userData);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors($rule);
+    }
+
+    public static function userDataProvider()
+    {
+        return [
+            'missing_fields' => [
+                [],
+                ['name', 'email', 'password']
+            ],
+            'invalid_email' => [
+                ['name' => 'John Doe', 'email' => 'invalid_email', 'password' => 'password', 'password_confirmation' => 'password'],
+                ['email']
+            ],
+            'short_password' => [
+                ['name' => 'John Doe', 'email' => 'john@example.com', 'password' => 'short', 'password_confirmation' => 'short'],
+                ['password']
+            ],
+            'password_confirmation_mismatch' => [
+                ['name' => 'John Doe', 'email' => 'john@example.com', 'password' => 'password', 'password_confirmation' => 'not_matching'],
+                ['password']
+            ],
+        ];
     }
 }
