@@ -27,4 +27,10 @@ class UserTest extends TestCase
 
         $response->assertSimilarJson($user->toArray());
     }
+
+    public function test_it_should_return_unauthorized_when_providing_invalid_token()
+    {
+        $response = $this->getJson(route('api.user.index'));
+        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
+    }
 }
