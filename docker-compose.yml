@@ -21,6 +21,28 @@ services:
       - ./default.conf.template:/etc/nginx/templates/default.conf.template:ro
     networks:
       - discord_app
+  mysql:
+    image: mysql:8.4.0
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_DATABASE: '${DB_DATABASE}'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    volumes:
+      - 'mysql-data:/var/lib/mysql'
+    deploy:
+      resources:
+        reservations:
+          cpus: '1'
+          memory: 1gb
+
+    networks:
+      - discord_app
 
 networks:
   discord_app:
+
+volumes:
+  mysql-data:

@@ -26,6 +26,7 @@ RUN apt-get update && apt-get install -y \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 RUN docker-php-ext-install pcntl
+RUN docker-php-ext-install mysqli pdo_mysql
 
 # Create a user/group with UID 1000 GID 1000
 RUN addgroup --gid ${GROUP_ID} laravel \
