@@ -35,7 +35,7 @@ class RegisterTest extends TestCase
             ]);
 
         $this->assertDatabaseHas('users', [
-            'id' => 1,
+            'id' => $response->json()['id'],
             'name' => $payload['name'],
             'email' => $payload['email'],
         ]);

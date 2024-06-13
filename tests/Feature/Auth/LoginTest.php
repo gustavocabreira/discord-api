@@ -42,35 +42,27 @@ class LoginTest extends TestCase
         $this->assertInstanceOf(Carbon::class, Carbon::createFromTimestamp($response->json()['expires_at']));
     }
 
-    #[DataProvider('credentialsDataProvider')]
+    #[DataProvider('invalidCredentialsDataProvider')]
     public function test_it_should_return_unauthorized_when_providing_wrong_credentials(array $credentials, array $rules)
     {
-        $user = User::factory()->make()->makeVisible(['password'])->toArray();
+        User::factory()->create([
+            'email' => 'email@email.com',
+            'password' => 'password',
+        ]);
 
-        $user = User::create($user);
+        $response = $this->postJson(route('api.auth.login'), $credentials);
 
-        $payload = [
-            'email' => $user->email,
-        ];
-
-        if(isset($rules[0]) && !empty($credentials)) {
-            $payload['email'] = $credentials['email'];
-        }
-
-        if(isset($credentials['password'])) {
-            $payload['password'] = $credentials['password'];
-        }
-
-        $response = $this->postJson(route('api.auth.login'), $payload);
-
-        if(in_array($rules[0], ['missing_fields', 'invalid_email'])) {
-            $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-        } else {
-            $response->assertStatus(Response::HTTP_UNAUTHORIZED);
-        }
+        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
     }
 
-    public static function credentialsDataProvider()
+    #[DataProvider('invalidPayloadDataProvider')]
+    public function test_it_should_return_unprocessable_entity_when_providing_invalid_payload(array $credentials, array $rules)
+    {
+        $response = $this->postJson(route('api.auth.login'), $credentials);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    public static function invalidPayloadDataProvider(): array
     {
         return [
             'missing_fields' => [
@@ -81,12 +73,18 @@ class LoginTest extends TestCase
                 ['email' => 'invalid_email', 'password' => 'password'],
                 ['invalid_email', 'email']
             ],
+        ];
+    }
+
+    public static function invalidCredentialsDataProvider(): array
+    {
+        return [
             'wrong_email' => [
                 ['email' => 'wrong_email@email.com', 'password' => 'password'],
                 ['wrong_email']
             ],
             'wrong_password' => [
-                ['email' => 'john@example.com', 'password' => 'wrong_password'],
+                ['email' => 'email@email.com', 'password' => 'wrong_password'],
                 ['password']
             ],
         ];
