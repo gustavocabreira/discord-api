@@ -28,6 +28,9 @@ RUN apt-get update && apt-get install -y \
 RUN docker-php-ext-install pcntl
 RUN docker-php-ext-install mysqli pdo_mysql
 
+RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - \
+        && apt-get install -y nodejs
+
 # Create a user/group with UID 1000 GID 1000
 RUN addgroup --gid ${GROUP_ID} laravel \
     && adduser --uid ${USER_ID} --ingroup laravel --shell /bin/sh --disabled-password laravel \
