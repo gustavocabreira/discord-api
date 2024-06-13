@@ -43,7 +43,7 @@ RUN mkdir -p /etc/sudoers.d \
 
 WORKDIR /var/www
 
-EXPOSE 9501
+EXPOSE 9051
 USER laravel
 
 CMD ["supervisord", "-c", "/etc/supervisor.conf"]
