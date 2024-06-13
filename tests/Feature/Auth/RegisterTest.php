@@ -48,6 +48,23 @@ class RegisterTest extends TestCase
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors($rule);
     }
 
+    public function test_email_should_be_unique()
+    {
+        User::factory()->create([
+            'email' => 'test@test.com',
+        ]);
+
+        $payload = [
+            'name' => fake()->name,
+            'email' => 'test@test.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+        ];
+
+        $response = $this->postJson(route('api.auth.register'), $payload);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertJsonValidationErrors(['email']);
+    }
+
     public static function userDataProvider()
     {
         return [
