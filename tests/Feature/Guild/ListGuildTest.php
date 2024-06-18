@@ -17,10 +17,10 @@ class ListGuildTest extends TestCase
     {
         $requestUser = User::factory()->createMany(5)->first();
         Guild::factory()->count(3)->create([
-            'owner_id' => rand(1,5),
+            'owner_id' => $requestUser->id,
         ]);
 
-        $response = $this->actingAs($requestUser)->get(route('api.guilds.index'));
+        $response = $this->actingAs($requestUser)->getJson(route('api.guilds.index'));
 
         $response
             ->assertStatus(Response::HTTP_OK)
@@ -34,5 +34,20 @@ class ListGuildTest extends TestCase
                     'updated_at',
                 ]
             ]);
+    }
+
+    public function test_user_must_be_authenticated_to_retrieve_guilds(): void
+    {
+        User::factory()->create();
+        Guild::factory()->count(3)->create([
+            'owner_id' => User::query()->first()->id,
+        ]);
+
+        $response = $this->getJson(route('api.guilds.index'));
+
+        $response
+            ->assertStatus(Response::HTTP_UNAUTHORIZED)
+            ->assertJsonStructure(['message'])
+            ->assertExactJson(['message' => 'Unauthenticated.']);
     }
 }
