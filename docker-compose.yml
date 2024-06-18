@@ -32,12 +32,6 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: 1
     volumes:
       - 'mysql-data:/var/lib/mysql'
-    deploy:
-      resources:
-        reservations:
-          cpus: '1'
-          memory: 1gb
-
     networks:
       - discord_app
 
