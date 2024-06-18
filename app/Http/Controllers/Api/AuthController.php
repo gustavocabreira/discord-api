@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -18,20 +19,17 @@ class AuthController extends Controller
         return response()->json($user, Response::HTTP_CREATED);
     }
 
-    public function login(Request $request): JsonResponse
+    public function login(LoginRequest $request): JsonResponse
     {
-        $request->validate([
-            'email' => ['required', 'string', 'email', 'max:255'],
-            'password' => ['required', 'string'],
-        ]);
+        $credentials = $request->validated();
 
-        if(!auth()->attempt($request->only('email', 'password'))){
+        if(!auth()->attempt($credentials)){
             return response()->json(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
         }
 
         $user = auth()->user();
 
-        $token = $user->createToken('Fodase', ['*'], now()->addYear());
+        $token = $user->createToken('Authorization', ['*'], now()->addYear());
 
         return response()->json([
             'user' => $user,
