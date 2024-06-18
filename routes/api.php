@@ -9,16 +9,16 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::name('api.')->group(function () {
-   Route::prefix('auth')->name('auth.')->group(function () {
-       Route::post('register', [AuthController::class, 'register'])->name('register');
-       Route::post('login', [AuthController::class, 'login'])->name('login');
-   });
+    Route::prefix('auth')->name('auth.')->group(function () {
+        Route::post('register', [AuthController::class, 'register'])->name('register');
+        Route::post('login', [AuthController::class, 'login'])->name('login');
+    });
 
-   Route::middleware('auth:sanctum')->group(function () {
+    Route::middleware('auth:sanctum')->group(function () {
         Route::prefix('user')->name('user.')->group(function () {
             Route::get('', [\App\Http\Controllers\Api\UserController::class, 'index'])->name('index');
         });
 
         Route::apiResource('guilds', \App\Http\Controllers\Api\GuildController::class)->only('index', 'store');
-   });
+    });
 });

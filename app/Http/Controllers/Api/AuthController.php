@@ -7,7 +7,6 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class AuthController extends Controller
@@ -16,6 +15,7 @@ class AuthController extends Controller
     {
         $payload = $request->validated();
         $user = User::query()->create($payload);
+
         return response()->json($user, Response::HTTP_CREATED);
     }
 
@@ -23,7 +23,7 @@ class AuthController extends Controller
     {
         $credentials = $request->validated();
 
-        if(!auth()->attempt($credentials)){
+        if (! auth()->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
         }
 

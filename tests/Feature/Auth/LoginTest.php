@@ -5,7 +5,6 @@ namespace Tests\Feature\Auth;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Response;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
@@ -67,11 +66,11 @@ class LoginTest extends TestCase
         return [
             'missing_fields' => [
                 [],
-                ['missing_fields', 'email', 'password']
+                ['missing_fields', 'email', 'password'],
             ],
             'email' => [
                 ['email' => 'invalid_email', 'password' => 'password'],
-                ['invalid_email', 'email']
+                ['invalid_email', 'email'],
             ],
         ];
     }
@@ -81,11 +80,11 @@ class LoginTest extends TestCase
         return [
             'wrong_email' => [
                 ['email' => 'wrong_email@email.com', 'password' => 'password'],
-                ['wrong_email']
+                ['wrong_email'],
             ],
             'wrong_password' => [
                 ['email' => 'email@email.com', 'password' => 'wrong_password'],
-                ['password']
+                ['password'],
             ],
         ];
     }

@@ -9,7 +9,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Guild extends Model
 {
     use HasFactory;
+
     protected $table = 'guilds';
+
     protected $primaryKey = 'id';
 
     protected $fillable = [

@@ -13,6 +13,7 @@ class GuildController extends Controller
     public function index(): JsonResponse
     {
         $guilds = Guild::query()->latest()->get();
+
         return response()->json($guilds, Response::HTTP_OK);
     }
 

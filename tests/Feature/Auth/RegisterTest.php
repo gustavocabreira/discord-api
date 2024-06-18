@@ -4,7 +4,6 @@ namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Response;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
@@ -41,7 +40,7 @@ class RegisterTest extends TestCase
         ]);
     }
 
-   #[DataProvider('userDataProvider')]
+    #[DataProvider('userDataProvider')]
     public function test_user_registration_validation($userData, $rule)
     {
         $response = $this->postJson(route('api.auth.register'), $userData);
@@ -70,19 +69,19 @@ class RegisterTest extends TestCase
         return [
             'missing_fields' => [
                 [],
-                ['name', 'email', 'password']
+                ['name', 'email', 'password'],
             ],
             'invalid_email' => [
                 ['name' => 'John Doe', 'email' => 'invalid_email', 'password' => 'password', 'password_confirmation' => 'password'],
-                ['email']
+                ['email'],
             ],
             'short_password' => [
                 ['name' => 'John Doe', 'email' => 'john@example.com', 'password' => 'short', 'password_confirmation' => 'short'],
-                ['password']
+                ['password'],
             ],
             'password_confirmation_mismatch' => [
                 ['name' => 'John Doe', 'email' => 'john@example.com', 'password' => 'password', 'password_confirmation' => 'not_matching'],
-                ['password']
+                ['password'],
             ],
         ];
     }
