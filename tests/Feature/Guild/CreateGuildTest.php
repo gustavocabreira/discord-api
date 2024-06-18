@@ -41,4 +41,18 @@ class CreateGuildTest extends TestCase
             ->assertJsonStructure(['message'])
             ->assertExactJson(['message' => 'Unauthenticated.']);
     }
+
+    public function test_it_should_return_unprocessable_entity_when_trying_to_create_a_guild_with_invalid_payload(): void
+    {
+        $user = User::factory()->create();
+        $invalidPayload = [
+            'name' => null,
+        ];
+
+        $response = $this->actingAs($user)->postJson(route('api.guilds.store'), $invalidPayload);
+
+        $response
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonValidationErrors(['name']);
+    }
 }
