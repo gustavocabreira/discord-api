@@ -10,6 +10,12 @@ use Illuminate\Http\Response;
 
 class GuildController extends Controller
 {
+    public function index(): JsonResponse
+    {
+        $guilds = Guild::query()->latest()->get();
+        return response()->json($guilds, Response::HTTP_OK);
+    }
+
     public function store(Request $request): JsonResponse
     {
         $request->validate([
