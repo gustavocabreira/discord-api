@@ -18,5 +18,7 @@ Route::name('api.')->group(function () {
         Route::prefix('user')->name('user.')->group(function () {
             Route::get('', [\App\Http\Controllers\Api\UserController::class, 'index'])->name('index');
         });
+
+        Route::apiResource('guilds', \App\Http\Controllers\Api\GuildController::class)->only('store');
    });
 });
