@@ -27,4 +27,20 @@ class DeleteGuildTest extends TestCase
             'id' => $guild->id,
         ]);
     }
+
+    public function test_only_owner_can_delete_a_guild(): void
+    {
+        $owner = User::factory()->create();
+        $guild = Guild::factory()->create([
+            'owner_id' => $owner->id,
+        ]);
+
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->deleteJson(route('api.guilds.destroy', ['guild' => $guild->id]));
+
+        $response
+            ->assertNotFound()
+            ->assertJsonStructure(['message']);
+    }
 }

@@ -7,6 +7,7 @@ use App\Models\Guild;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Gate;
 
 class GuildController extends Controller
 {
@@ -33,7 +34,10 @@ class GuildController extends Controller
 
     public function destroy(Guild $guild): JsonResponse
     {
+        Gate::authorize('delete', $guild);
+
         $guild->delete();
+
         return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 }
