@@ -7,11 +7,14 @@ use App\Models\Guild;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Gate;
 
 class ChannelController extends Controller
 {
     public function store(Guild $guild, Request $request): JsonResponse
     {
+        Gate::authorize('createChannel', $guild);
+
         $request->validate([
             'name' => ['required', 'max:255'],
         ]);

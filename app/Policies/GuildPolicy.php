@@ -14,4 +14,11 @@ class GuildPolicy
             ? Response::allow()
             : Response::denyAsNotFound();
     }
+
+    public function createChannel(User $user, Guild $guild): Response
+    {
+        return $user->id === $guild->owner_id
+            ? Response::allow()
+            : Response::denyAsNotFound();
+    }
 }

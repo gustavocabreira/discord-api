@@ -9,7 +9,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Channel extends Model
 {
     use HasFactory;
+
     protected $table = 'channels';
+
     protected $primaryKey = 'id';
 
     protected $fillable = [

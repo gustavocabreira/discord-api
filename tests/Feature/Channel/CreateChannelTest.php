@@ -38,4 +38,26 @@ class CreateChannelTest extends TestCase
             ])
             ->assertDatabaseCount('channels', 1);
     }
+
+    public function test_only_guild_owner_can_create_a_channel(): void
+    {
+        $guildOwner = User::factory()->create();
+        $guild = Guild::factory()->create([
+            'owner_id' => $guildOwner->id,
+        ]);
+
+        $user = User::factory()->create();
+
+        $payload = [
+            'name' => fake()->name,
+        ];
+
+        $response = $this->actingAs($user)->postJson(route('api.guilds.channels.store', [
+            'guild' => $guild->id,
+        ]), $payload);
+
+        $response
+            ->assertNotFound()
+            ->assertJsonStructure(['message']);
+    }
 }
