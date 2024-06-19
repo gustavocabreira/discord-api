@@ -60,4 +60,24 @@ class CreateChannelTest extends TestCase
             ->assertNotFound()
             ->assertJsonStructure(['message']);
     }
+
+    public function test_it_should_return_unprocessable_entity_when_trying_to_create_a_channel_with_invalid_payload(): void
+    {
+        $user = User::factory()->create();
+        $guild = Guild::factory()->create([
+            'owner_id' => $user->id,
+        ]);
+
+        $invalidPayload = [
+            'name' => null,
+        ];
+
+        $response = $this->actingAs($user)->postJson(route('api.guilds.channels.store', [
+            'guild' => $guild->id,
+        ]), $invalidPayload);
+
+        $response
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonValidationErrors(['name']);
+    }
 }
