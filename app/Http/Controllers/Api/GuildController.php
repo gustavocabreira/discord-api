@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Guild\GuildStoreRequest;
 use App\Models\Guild;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 
@@ -18,16 +18,11 @@ class GuildController extends Controller
         return response()->json($guilds, Response::HTTP_OK);
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(GuildStoreRequest $request): JsonResponse
     {
-        $request->validate([
-            'name' => ['required', 'max:255'],
-        ]);
+        $payload = $request->validated();
 
-        $guild = Guild::query()->create([
-            'name' => $request->input('name'),
-            'owner_id' => request()->user()->id,
-        ]);
+        $guild = Guild::query()->create($payload);
 
         return response()->json($guild, Response::HTTP_CREATED);
     }
