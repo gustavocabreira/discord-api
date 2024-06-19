@@ -30,4 +30,10 @@ class GuildController extends Controller
 
         return response()->json($guild, Response::HTTP_CREATED);
     }
+
+    public function destroy(Guild $guild): JsonResponse
+    {
+        $guild->delete();
+        return response()->json(null, Response::HTTP_NO_CONTENT);
+    }
 }
