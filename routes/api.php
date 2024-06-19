@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ChannelController;
+use App\Http\Controllers\Api\GuildController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,9 +19,10 @@ Route::name('api.')->group(function () {
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::prefix('user')->name('user.')->group(function () {
-            Route::get('', [\App\Http\Controllers\Api\UserController::class, 'index'])->name('index');
+            Route::get('', [UserController::class, 'index'])->name('index');
         });
 
-        Route::apiResource('guilds', \App\Http\Controllers\Api\GuildController::class)->only('index', 'store', 'destroy');
+        Route::apiResource('guilds', GuildController::class)->only('index', 'store', 'destroy');
+        Route::apiResource('guilds.channels', ChannelController::class)->only('store');
     });
 });
