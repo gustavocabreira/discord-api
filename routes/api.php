@@ -22,7 +22,7 @@ Route::name('api.')->group(function () {
             Route::get('', [UserController::class, 'index'])->name('index');
         });
 
-        Route::apiResource('guilds', GuildController::class)->only('index', 'store', 'destroy');
+        Route::apiResource('guilds', GuildController::class)->only('index', 'store', 'destroy', 'show');
         Route::apiResource('guilds.channels', ChannelController::class)->only('store');
     });
 });
