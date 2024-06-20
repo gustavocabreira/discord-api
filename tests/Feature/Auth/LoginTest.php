@@ -42,7 +42,7 @@ class LoginTest extends TestCase
     }
 
     #[DataProvider('invalidCredentialsDataProvider')]
-    public function test_it_should_return_unauthorized_when_providing_wrong_credentials(array $credentials, array $rules)
+    public function test_it_should_return_unauthorized_when_providing_wrong_credentials(array $credentials)
     {
         User::factory()->create([
             'email' => 'email@email.com',
@@ -80,11 +80,9 @@ class LoginTest extends TestCase
         return [
             'wrong_email' => [
                 ['email' => 'wrong_email@email.com', 'password' => 'password'],
-                ['wrong_email'],
             ],
             'wrong_password' => [
                 ['email' => 'email@email.com', 'password' => 'wrong_password'],
-                ['password'],
             ],
         ];
     }

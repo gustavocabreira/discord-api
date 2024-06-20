@@ -38,6 +38,8 @@ class RegisterTest extends TestCase
             'name' => $payload['name'],
             'email' => $payload['email'],
         ]);
+
+        $this->assertDatabaseCount('users', 1);
     }
 
     #[DataProvider('userDataProvider')]
