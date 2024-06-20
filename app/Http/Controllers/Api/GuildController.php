@@ -35,4 +35,11 @@ class GuildController extends Controller
 
         return response()->json(null, Response::HTTP_NO_CONTENT);
     }
+
+    public function show(Guild $guild): JsonResponse
+    {
+        $guild->load('channels');
+
+        return response()->json($guild, Response::HTTP_OK);
+    }
 }
