@@ -6,7 +6,6 @@ use App\Models\Channel;
 use App\Models\Guild;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class StoreMessageTest extends TestCase
@@ -23,8 +22,8 @@ class StoreMessageTest extends TestCase
         ];
 
         $response = $this->actingAs($user)->postJson(route('api.guilds.channels.messages.store', [
-            'guild'   => $guild->id,
-            'channel' => $channel->id
+            'guild' => $guild->id,
+            'channel' => $channel->id,
         ]), $payload);
 
         $response->assertCreated();
