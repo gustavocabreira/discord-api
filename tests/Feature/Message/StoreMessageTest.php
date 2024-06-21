@@ -61,7 +61,7 @@ class StoreMessageTest extends TestCase
         $channel = Channel::factory()->create();
 
         $payload = [
-            'content' => fake()->text, 
+            'content' => fake()->text,
         ];
 
         $response = $this->postJson(route('api.guilds.channels.messages.store', [
@@ -73,5 +73,24 @@ class StoreMessageTest extends TestCase
             ->assertStatus(Response::HTTP_UNAUTHORIZED)
             ->assertJsonStructure(['message'])
             ->assertExactJson(['message' => 'Unauthenticated.']);
+    }
+
+    public function test_it_should_return_unprocessable_entity_when_trying_to_create_a_message_with_invalid_payload(): void
+    {
+        $user = User::factory()->create();
+        $guild = Guild::factory()->create(['owner_id' => $user->id]);
+        $channel = Channel::factory()->create();
+        $invalidPayload = [
+            'content' => null,
+        ];
+
+        $response = $this->actingAs($user)->postJson(route('api.guilds.channels.messages.store', [
+            'guild' => $guild->id,
+            'channel' => $channel->id,
+        ]), $invalidPayload);
+
+        $response
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonValidationErrors(['content']);
     }
 }
