@@ -40,5 +40,16 @@ class StoreMessageTest extends TestCase
         $this->assertIsArray($response->json('sender'));
         $this->assertIsArray($response->json('channel'));
         $this->assertIsArray($response->json('channel.guild'));
+        $this->assertEquals($payload['content'], $response->json('content'));
+        $this->assertEquals($user->id, $response->json('sender_id'));
+        $this->assertEquals($channel->id, $response->json('channel_id'));
+        $this->assertEquals($response->json('sender.id'), $response->json('sender_id'));
+        $this->assertEquals($response->json('channel.id'), $response->json('channel_id'));
+        $this->assertDatabaseCount('messages', 1);
+        $this->assertDatabaseHas('messages', [
+            'content' => $payload['content'],
+            'sender_id' => $user->id,
+            'channel_id' => $channel->id,
+        ]);
     }
 }
