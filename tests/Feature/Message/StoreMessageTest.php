@@ -6,6 +6,7 @@ use App\Models\Channel;
 use App\Models\Guild;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Response;
 use Tests\TestCase;
 
 class StoreMessageTest extends TestCase
@@ -51,5 +52,26 @@ class StoreMessageTest extends TestCase
             'sender_id' => $user->id,
             'channel_id' => $channel->id,
         ]);
+    }
+
+    public function test_user_must_be_authenticated_to_create_a_message(): void
+    {
+        $user = User::factory()->create();
+        $guild = Guild::factory()->create(['owner_id' => $user->id]);
+        $channel = Channel::factory()->create();
+
+        $payload = [
+            'content' => fake()->text, 
+        ];
+
+        $response = $this->postJson(route('api.guilds.channels.messages.store', [
+            'guild' => $guild->id,
+            'channel' => $channel->id,
+        ]), $payload);
+
+        $response
+            ->assertStatus(Response::HTTP_UNAUTHORIZED)
+            ->assertJsonStructure(['message'])
+            ->assertExactJson(['message' => 'Unauthenticated.']);
     }
 }
