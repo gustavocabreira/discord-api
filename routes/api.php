@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\ChannelController;
 use App\Http\Controllers\Api\GuildController;
 use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\InviteController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +26,7 @@ Route::name('api.')->group(function () {
 
         Route::apiResource('guilds', GuildController::class)->only('index', 'store', 'destroy', 'show');
         Route::apiResource('guilds.channels', ChannelController::class)->only('store');
+        Route::apiResource('guilds.invites', InviteController::class)->only('store');
         Route::apiResource('guilds.channels.messages', MessageController::class)->only('store');
     });
 });

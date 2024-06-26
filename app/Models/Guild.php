@@ -33,4 +33,9 @@ class Guild extends Model
     {
         return $this->hasMany(Channel::class, 'guild_id', 'id');
     }
+
+    public function invites(): HasMany
+    {
+        return $this->hasMany(Invite::class);
+    }
 }
